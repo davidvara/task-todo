@@ -4,7 +4,6 @@ package com.david.tasktodo.domain;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.Range;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
@@ -63,8 +62,6 @@ public class ToDoItem {
         this.createdAt = createdAt;
     }
 
-//    @ApiModelProperty(example = "42", required=true, value = "")
-//    @NotNull
     public long getId() {
         return id;
     }
@@ -106,8 +103,7 @@ public class ToDoItem {
 
         if (id != todo.id) return false;
         if (isCompleted != todo.isCompleted) return false;
-        if (text != null ? !text.equals(todo.text) : todo.text != null) return false;
-        return createdAt != null ? createdAt.equals(todo.createdAt) : todo.createdAt == null;
+        return (text != null ? text.equals(todo.text) : todo.text == null) && (createdAt != null ? createdAt.equals(todo.createdAt) : todo.createdAt == null);
     }
 
     @Override

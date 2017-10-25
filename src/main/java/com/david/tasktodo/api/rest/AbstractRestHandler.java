@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
 
 @ControllerAdvice(basePackages = {"com.david.tasktodo.api.rest"} )
 public abstract class AbstractRestHandler implements ApplicationEventPublisherAware {
@@ -54,8 +53,6 @@ public abstract class AbstractRestHandler implements ApplicationEventPublisherAw
         return new ResponseEntity<>(restErrorInformation, HttpStatus.BAD_REQUEST);
     }
 
-
-
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseBody
@@ -78,10 +75,10 @@ public abstract class AbstractRestHandler implements ApplicationEventPublisherAw
     }
 
     private CustomError createErrorResponse (MethodArgumentNotValidException ex) {
-
         Object object = ex.getBindingResult().getTarget();
 
-        if(object instanceof ToDoItemAddRequest || object instanceof ToDoItemUpdateRequest) {
+        //if(object instanceof ToDoItemAddRequest || object instanceof ToDoItemUpdateRequest) {
+        if(object instanceof CustomError) {
             return createToDoItemValidationError(ex);
         }
 

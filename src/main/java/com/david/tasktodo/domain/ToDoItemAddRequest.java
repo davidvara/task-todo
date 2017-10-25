@@ -2,13 +2,8 @@ package com.david.tasktodo.domain;
 
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.Range;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.Valid;
-
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 

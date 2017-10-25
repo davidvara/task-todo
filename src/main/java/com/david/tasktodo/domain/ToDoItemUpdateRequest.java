@@ -2,9 +2,7 @@ package com.david.tasktodo.domain;
 
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.Range;
 
-import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -31,7 +29,6 @@ public class ToDoItemUpdateRequest {
         this.text = text;
         this.isCompleted = isCompleted;
     }
-
 
     public String getText() {
         return text;

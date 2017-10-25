@@ -3,12 +3,8 @@ package com.david.tasktodo.domain;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
 @XmlRootElement
 public class ToDoItemValidationError implements CustomError {
@@ -95,7 +91,4 @@ public class ToDoItemValidationError implements CustomError {
             this.value = value;
         }
     }
-
-
-
 }

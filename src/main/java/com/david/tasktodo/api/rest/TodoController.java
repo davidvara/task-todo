@@ -1,13 +1,11 @@
 package com.david.tasktodo.api.rest;
 
 import com.david.tasktodo.domain.*;
-import com.david.tasktodo.exception.DataFormatException;
 import com.david.tasktodo.service.TodoService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -72,13 +70,11 @@ public class TodoController  extends AbstractRestHandler {
                             @PathVariable("id") Long id,
                             @Valid @RequestBody ToDoItemUpdateRequest body,
                             HttpServletRequest request, HttpServletResponse response) {
-
         ToDoItem toDoItem = this.todoService.updatePartialToDoItem(body, id);
-
         return new ResponseEntity<>(toDoItem, HttpStatus.ACCEPTED);
     }
 
-    Function<ToDoItemAddRequest, ToDoItem> toDoItemAddRequestToToDoItem = TodoController::apply;
+    private Function<ToDoItemAddRequest, ToDoItem> toDoItemAddRequestToToDoItem = TodoController::apply;
 
     private static ToDoItem apply(ToDoItemAddRequest toDoItemAddRequest) {
         return new ToDoItem(toDoItemAddRequest.getText(), false, new Date().toString());

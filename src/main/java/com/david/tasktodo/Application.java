@@ -10,12 +10,10 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
 
 @SpringBootApplication
 @Configuration
-@EnableAutoConfiguration  // Sprint Boot Auto Configuration
+@EnableAutoConfiguration
 @ComponentScan(basePackages = {"com.david.tasktodo"})
 @EnableJpaRepositories("com.david.tasktodo.repositories")
 public class Application extends SpringBootServletInitializer {
@@ -31,6 +29,4 @@ public class Application extends SpringBootServletInitializer {
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		return application.sources(applicationClass);
 	}
-
-
 }
