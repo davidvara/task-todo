@@ -1,0 +1,248 @@
+ swagger: '2.0'
+ info:
+   description: REST task-todo
+   version: '1.0'
+   title: REST task-todo
+   termsOfService: github
+   license:
+     name: David
+ host: 'localhost:8090'
+ basePath: /
+ tags:
+   - name: todo
+     description: To Do List endpoints
+   - name: tasks
+     description: General algorithmic tasks
+ paths:
+   /tasks/validateBrackets:
+     get:
+       tags:
+         - tasks
+       summary: Input string (max length 50)
+       operationId: createTodoUsingGET
+       consumes:
+         - application/json
+       produces:
+         - application/json
+       parameters:
+         - name: input
+           in: query
+           description: input
+           required: true
+           type: string
+       responses:
+         '200':
+           description: OK
+           schema:
+             $ref: '#/definitions/BalanceTestResult'
+         '400':
+           description: Validation error
+           schema:
+             $ref: '#/definitions/ToDoItemValidationError'
+         '401':
+           description: Unauthorized
+         '403':
+           description: Forbidden
+         '404':
+           description: Not Found
+   /todo:
+     post:
+       tags:
+         - todo
+       summary: Create a todo resource.
+       operationId: createTodoUsingPOST
+       consumes:
+         - application/json
+       produces:
+         - application/json
+       parameters:
+         - in: body
+           name: body
+           description: body
+           required: true
+           schema:
+             $ref: '#/definitions/ToDoItemAddRequest'
+       responses:
+         '200':
+           description: OK
+           schema:
+             $ref: '#/definitions/ToDoItem'
+         '201':
+           description: Created
+           schema:
+             $ref: '#/definitions/ToDoItem'
+         '400':
+           description: Validation error
+           schema:
+             $ref: '#/definitions/ToDoItemValidationError'
+         '401':
+           description: Unauthorized
+         '403':
+           description: Forbidden
+         '404':
+           description: Not Found
+   '/todo/{id}':
+     get:
+       tags:
+         - todo
+       summary: Get a single todo.
+       description: You have to provide a valid todo ID.
+       operationId: getToDoItemUsingGET
+       consumes:
+         - application/json
+       produces:
+         - application/json
+       parameters:
+         - name: id
+           in: path
+           description: The ID of the todo.
+           required: true
+           type: integer
+           format: int64
+       responses:
+         '200':
+           description: OK
+           schema:
+             $ref: '#/definitions/ToDoItem'
+         '302':
+           description: Found
+           schema:
+             type: object
+         '400':
+           description: Validation error
+           schema:
+             $ref: '#/definitions/ToDoItemValidationError'
+         '401':
+           description: Unauthorized
+         '403':
+           description: Forbidden
+         '404':
+           description: Not Found Error
+           schema:
+             $ref: '#/definitions/ToDoItemNotFoundError'
+     patch:
+       tags:
+         - todo
+       summary: Update a todo resource.
+       description: You have to provide a valid todo ID in the URL and in the payload. The ID attribute can not be updated.
+       operationId: updateTodoUsingPATCH
+       consumes:
+         - application/json
+       produces:
+         - application/json
+       parameters:
+         - name: id
+           in: path
+           description: The ID of the existing todo resource.
+           required: true
+           type: integer
+           format: int64
+         - in: body
+           name: body
+           description: body
+           required: true
+           schema:
+             $ref: '#/definitions/ToDoItemUpdateRequest'
+       responses:
+         '200':
+           description: OK
+           schema:
+             $ref: '#/definitions/ToDoItem'
+         '202':
+           description: Accepted
+           schema:
+             type: object
+         '204':
+           description: No Content
+         '400':
+           description: Validation error
+           schema:
+             $ref: '#/definitions/ToDoItemValidationError'
+         '401':
+           description: Unauthorized
+         '403':
+           description: Forbidden
+         '404':
+           description: Not Found Error
+           schema:
+             $ref: '#/definitions/ToDoItemNotFoundError'
+ definitions:
+   BalanceTestResult:
+     type: object
+     properties:
+       balanced:
+         type: boolean
+       input:
+         type: string
+         example: '[(]'
+   Details:
+     type: object
+     properties:
+       location:
+         type: string
+         example: params
+       msg:
+         type: string
+         example: Must be between 1 and 50 chars long
+       param:
+         type: string
+         example: text
+       value:
+         type: string
+     description: details attributes
+   Details1:
+     type: object
+     properties:
+       message:
+         type: string
+         example: Item with 9 not found
+     description: details attribute
+   ToDoItem:
+     type: object
+     required:
+       - text
+     properties:
+       completed:
+         type: boolean
+       id:
+         type: integer
+         format: int64
+         example: 42
+       text:
+         type: string
+         example: Uulwi ifis halahs gag erh'ongg w'ssh.
+       createdAt:
+         type: string
+   ToDoItemAddRequest:
+     type: object
+     properties:
+       text:
+         type: string
+         example: Uulwi ifis halahs gag erh'ongg w'ssh.
+   ToDoItemNotFoundError:
+     type: object
+     properties:
+       details1:
+         description: details1
+         $ref: '#/definitions/Details1'
+       name:
+         type: string
+         example: validation Error
+         description: validation Error
+   ToDoItemUpdateRequest:
+     type: object
+     properties:
+       completed:
+         type: boolean
+       text:
+         type: string
+         example: Uulwi ifis halahs gag erh'ongg w'ssh.
+   ToDoItemValidationError:
+     type: object
+     properties:
+       details:
+         description: details
+         $ref: '#/definitions/Details'
+       name:
+         type: string
+         example: validation Error
