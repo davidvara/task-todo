@@ -6,7 +6,7 @@
    termsOfService: github
    license:
      name: David
- host: 'localhost:8090'
+ host: task-todo-rest-api.herokuapp.com
  basePath: /
  tags:
    - name: todo
