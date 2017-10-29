@@ -1,12 +1,19 @@
 package com.david.tasktodo.api.rest;
 
-import com.david.tasktodo.domain.*;
+import com.david.tasktodo.domain.ToDoItem;
+import com.david.tasktodo.domain.ToDoItemAddRequest;
+import com.david.tasktodo.domain.ToDoItemUpdateRequest;
 import com.david.tasktodo.service.TodoService;
-import io.swagger.annotations.*;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,62 +23,38 @@ import java.util.function.Function;
 
 @RestController
 @RequestMapping(value = "/todo")
-@Api(tags = {"todo"}, description = "To Do List endpoints")
-public class TodoController  extends AbstractRestHandler {
+public class TodoController extends AbstractRestHandler implements TodoControl {
 
     @Autowired
     private TodoService todoService;
 
-    @RequestMapping(value = "",
-            method = RequestMethod.POST,
-            consumes = {"application/json"},
-            produces = {"application/json"})
-    @ResponseStatus(HttpStatus.CREATED)
-    @ApiOperation(value = "Create a todo resource.", response = ToDoItem.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK",  response = ToDoItem.class),
-            @ApiResponse(code = 400,message = "Validation error", response = ToDoItemValidationError.class)})
     public ResponseEntity<?> createTodo(@Valid @RequestBody ToDoItemAddRequest body,
-                                     HttpServletRequest request, HttpServletResponse response) {
+                                     HttpServletRequest request, HttpServletResponse response, UriComponentsBuilder builder) {
         ToDoItem toDoItem = this.todoService.createTodo(toDoItemAddRequestToToDoItem.apply(body));
-        return new ResponseEntity<>(toDoItem, HttpStatus.CREATED);
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentLength(request.getContentLength());
+//        headers.setLocation(builder.path( request.getServletPath()).build().toUri());
+
+        return new ResponseEntity<>(toDoItem, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{id}",
-            method = RequestMethod.GET,
-            produces = {"application/json"})
-    @ResponseStatus(HttpStatus.FOUND)
-    @ApiOperation(value = "Get a single todo.",
-            notes = "You have to provide a valid todo ID.")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK",  response = ToDoItem.class),
-            @ApiResponse(code = 400,message = "Validation error", response = ToDoItemValidationError.class),
-            @ApiResponse(code = 404,message = "Not Found Error", response = ToDoItemNotFoundError.class)})
     public ResponseEntity<?> getToDoItem(@ApiParam(value = "The ID of the todo.", required = true)
                    @PathVariable("id") Long id,
-                   HttpServletRequest request, HttpServletResponse response) throws Exception {
+                   HttpServletRequest request, HttpServletResponse response, UriComponentsBuilder builder) {
         ToDoItem toDoItem = this.todoService.getToDoItem(id);
-        checkResourceFound(toDoItem);
-        return new ResponseEntity<>(toDoItem, HttpStatus.FOUND);
+        checkResourceFound(toDoItem, id);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentLength(request.getContentLength());
+        headers.setLocation(builder.path( request.getServletPath()).build().toUri());
+        return new ResponseEntity<>(toDoItem,headers, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{id}",
-            method = RequestMethod.PATCH,
-            consumes = {"application/json"},
-            produces = {"application/json"})
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    @ApiOperation(value = "Update a todo resource.",
-            notes = "You have to provide a valid todo ID in the URL and in the payload. The ID attribute can not be updated.")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK",  response = ToDoItem.class),
-            @ApiResponse(code = 400,message = "Validation error", response = ToDoItemValidationError.class),
-            @ApiResponse(code = 404,message = "Not Found Error", response = ToDoItemNotFoundError.class)})
     public ResponseEntity<?> updateTodo(@ApiParam(value = "The ID of the existing todo resource.", required = true)
                             @PathVariable("id") Long id,
                             @Valid @RequestBody ToDoItemUpdateRequest body,
                             HttpServletRequest request, HttpServletResponse response) {
         ToDoItem toDoItem = this.todoService.updatePartialToDoItem(body, id);
-        return new ResponseEntity<>(toDoItem, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(toDoItem, HttpStatus.OK);
     }
 
     private Function<ToDoItemAddRequest, ToDoItem> toDoItemAddRequestToToDoItem = TodoController::apply;

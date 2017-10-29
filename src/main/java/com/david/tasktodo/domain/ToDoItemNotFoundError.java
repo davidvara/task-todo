@@ -23,6 +23,10 @@ public class ToDoItemNotFoundError implements CustomError {
         this.details1 = details1;
     }
 
+    public ToDoItemNotFoundError(Details1 details1) {
+        this.details1 = details1;
+    }
+
     public String getName() {
         return name;
     }

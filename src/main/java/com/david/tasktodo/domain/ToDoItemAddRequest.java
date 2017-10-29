@@ -12,7 +12,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class ToDoItemAddRequest {
 
     @NotNull
-    //@Length(min = 1, max = 50)
     @Length(
             min=1,
             max=50,
